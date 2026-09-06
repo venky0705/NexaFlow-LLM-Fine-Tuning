@@ -465,7 +465,7 @@ def generate_response(
     if not response:
         return (
             "I wasn't able to generate a response. "
-            "Please try rephrasing your NexaFlow question."
+            "Please try rephrasing your NexaFlow question. "
         )
 
     return response
