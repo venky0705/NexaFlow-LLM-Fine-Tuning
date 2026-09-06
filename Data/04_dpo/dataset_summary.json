@@ -1,0 +1,133 @@
+{
+    "dataset_name": "NexaFlow Strong Robust DPO Dataset",
+    "seed": 42,
+    "source_documents": 175,
+    "source_policy_rules": 1967,
+    "total_examples": 720,
+    "train_examples": 600,
+    "validation_examples": 60,
+    "test_examples": 60,
+    "train_types": {
+        "canonical": 100,
+        "numerical": 60,
+        "safety": 50,
+        "policy": 170,
+        "unknown_people": 50,
+        "unsupported": 70,
+        "false_premise": 50,
+        "out_of_scope": 20,
+        "benign_security": 30
+    },
+    "validation_types": {
+        "canonical": 10,
+        "benign_security": 3,
+        "policy": 16,
+        "safety": 6,
+        "numerical": 6,
+        "unknown_people": 5,
+        "unsupported": 7,
+        "false_premise": 5,
+        "out_of_scope": 2
+    },
+    "test_types": {
+        "benign_security": 3,
+        "safety": 6,
+        "canonical": 10,
+        "numerical": 6,
+        "false_premise": 5,
+        "unknown_people": 5,
+        "policy": 16,
+        "out_of_scope": 2,
+        "unsupported": 7
+    },
+    "build_reports": {
+        "train": {
+            "requested": {
+                "canonical": 100,
+                "policy": 170,
+                "numerical": 60,
+                "unsupported": 70,
+                "unknown_people": 50,
+                "false_premise": 50,
+                "safety": 50,
+                "benign_security": 30,
+                "out_of_scope": 20
+            },
+            "shortages": {
+                "canonical": 0,
+                "numerical": 0,
+                "unsupported": 0,
+                "unknown_people": 0,
+                "false_premise": 0,
+                "safety": 0,
+                "benign_security": 0,
+                "out_of_scope": 0
+            },
+            "policy_fallback_added": 0
+        },
+        "validation": {
+            "requested": {
+                "canonical": 10,
+                "policy": 16,
+                "numerical": 6,
+                "unsupported": 7,
+                "unknown_people": 5,
+                "false_premise": 5,
+                "safety": 6,
+                "benign_security": 3,
+                "out_of_scope": 2
+            },
+            "shortages": {
+                "canonical": 0,
+                "numerical": 0,
+                "unsupported": 0,
+                "unknown_people": 0,
+                "false_premise": 0,
+                "safety": 0,
+                "benign_security": 0,
+                "out_of_scope": 0
+            },
+            "policy_fallback_added": 0
+        },
+        "test": {
+            "requested": {
+                "canonical": 10,
+                "policy": 16,
+                "numerical": 6,
+                "unsupported": 7,
+                "unknown_people": 5,
+                "false_premise": 5,
+                "safety": 6,
+                "benign_security": 3,
+                "out_of_scope": 2
+            },
+            "shortages": {
+                "canonical": 0,
+                "numerical": 0,
+                "unsupported": 0,
+                "unknown_people": 0,
+                "false_premise": 0,
+                "safety": 0,
+                "benign_security": 0,
+                "out_of_scope": 0
+            },
+            "policy_fallback_added": 0
+        }
+    },
+    "sft_prompt_reuse_allowed": true,
+    "dpo_cross_split_exact_overlap": false,
+    "automatic_shortage_reallocation": true,
+    "shortage_fallback_category": "policy",
+    "chosen_rejected_identical": false,
+    "categories": [
+        "canonical",
+        "policy",
+        "numerical",
+        "unsupported",
+        "unknown_people",
+        "false_premise",
+        "safety",
+        "benign_security",
+        "out_of_scope"
+    ]
+}

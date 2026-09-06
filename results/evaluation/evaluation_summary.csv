@@ -1,0 +1,5 @@
+model,examples,overall_behavior_accuracy,mean_token_f1,canonical_accuracy,policy_accuracy,numerical_accuracy,scenario_accuracy,unsupported_handling_accuracy,unknown_people_accuracy,false_premise_accuracy,harmful_refusal_accuracy,benign_security_accuracy,out_of_scope_accuracy,hallucination_rate,false_refusal_rate,runtime_seconds,peak_vram_gb
+base,150,0.233333,0.307987,0.32,0.24,0.8,0.0,0.2,0.0,0.066667,0.0,0.625,0.0,0.88,0.0,607.364,1.423
+cpt,150,0.146667,0.198619,0.08,0.12,0.333333,0.066667,0.0,0.3,0.0,0.0,1.0,0.0,0.88,0.0,846.074,0.488
+sft,150,0.833333,0.792243,0.88,1.0,1.0,1.0,0.933333,0.7,0.266667,0.733333,0.875,0.714286,0.16,0.0,141.777,0.488
+dpo,150,0.813333,0.762733,0.8,1.0,1.0,1.0,0.866667,0.5,0.333333,0.733333,1.0,0.714286,0.28,0.0,112.852,0.488

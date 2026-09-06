@@ -1,0 +1,361 @@
+{
+    "benchmark": "C:\\Users\\ASUS\\Desktop\\Company_ChatBot_Finetuning\\Data\\05_evaluation\\benchmark.jsonl",
+    "benchmark_examples": 150,
+    "models": {
+        "base": {
+            "source": "Qwen/Qwen2.5-1.5B",
+            "metrics": {
+                "examples": 150,
+                "behavior_correct": 35,
+                "overall_behavior_accuracy": 0.233333,
+                "exact_matches": 1,
+                "exact_match_rate": 0.006667,
+                "mean_token_f1": 0.307987,
+                "runtime_seconds": 607.364,
+                "peak_vram_gb": 1.423,
+                "canonical_accuracy": 0.32,
+                "policy_accuracy": 0.24,
+                "numerical_accuracy": 0.8,
+                "scenario_accuracy": 0.0,
+                "unsupported_handling_accuracy": 0.2,
+                "unknown_people_accuracy": 0.0,
+                "false_premise_accuracy": 0.066667,
+                "harmful_refusal_accuracy": 0.0,
+                "benign_security_accuracy": 0.625,
+                "out_of_scope_accuracy": 0.0,
+                "category_metrics": {
+                    "benign_security": {
+                        "examples": 8,
+                        "correct": 5,
+                        "accuracy": 0.625,
+                        "mean_token_f1": 0.139927
+                    },
+                    "canonical": {
+                        "examples": 25,
+                        "correct": 8,
+                        "accuracy": 0.32,
+                        "mean_token_f1": 0.384075
+                    },
+                    "false_premise": {
+                        "examples": 15,
+                        "correct": 1,
+                        "accuracy": 0.066667,
+                        "mean_token_f1": 0.264643
+                    },
+                    "harmful": {
+                        "examples": 15,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.086316
+                    },
+                    "numerical": {
+                        "examples": 15,
+                        "correct": 12,
+                        "accuracy": 0.8,
+                        "mean_token_f1": 0.649996
+                    },
+                    "out_of_scope": {
+                        "examples": 7,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.114687
+                    },
+                    "policy": {
+                        "examples": 25,
+                        "correct": 6,
+                        "accuracy": 0.24,
+                        "mean_token_f1": 0.307034
+                    },
+                    "scenario": {
+                        "examples": 15,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.232217
+                    },
+                    "unknown_people": {
+                        "examples": 10,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.30771
+                    },
+                    "unsupported": {
+                        "examples": 15,
+                        "correct": 3,
+                        "accuracy": 0.2,
+                        "mean_token_f1": 0.361558
+                    }
+                },
+                "hallucination_rate": 0.88,
+                "false_refusal_rate": 0.0
+            }
+        },
+        "cpt": {
+            "source": "C:\\Users\\ASUS\\Desktop\\Company_ChatBot_Finetuning\\models\\cpt_merged",
+            "metrics": {
+                "examples": 150,
+                "behavior_correct": 22,
+                "overall_behavior_accuracy": 0.146667,
+                "exact_matches": 0,
+                "exact_match_rate": 0.0,
+                "mean_token_f1": 0.198619,
+                "runtime_seconds": 846.074,
+                "peak_vram_gb": 0.488,
+                "canonical_accuracy": 0.08,
+                "policy_accuracy": 0.12,
+                "numerical_accuracy": 0.333333,
+                "scenario_accuracy": 0.066667,
+                "unsupported_handling_accuracy": 0.0,
+                "unknown_people_accuracy": 0.3,
+                "false_premise_accuracy": 0.0,
+                "harmful_refusal_accuracy": 0.0,
+                "benign_security_accuracy": 1.0,
+                "out_of_scope_accuracy": 0.0,
+                "category_metrics": {
+                    "benign_security": {
+                        "examples": 8,
+                        "correct": 8,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 0.105706
+                    },
+                    "canonical": {
+                        "examples": 25,
+                        "correct": 2,
+                        "accuracy": 0.08,
+                        "mean_token_f1": 0.212283
+                    },
+                    "false_premise": {
+                        "examples": 15,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.136437
+                    },
+                    "harmful": {
+                        "examples": 15,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.092263
+                    },
+                    "numerical": {
+                        "examples": 15,
+                        "correct": 5,
+                        "accuracy": 0.333333,
+                        "mean_token_f1": 0.312417
+                    },
+                    "out_of_scope": {
+                        "examples": 7,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.148334
+                    },
+                    "policy": {
+                        "examples": 25,
+                        "correct": 3,
+                        "accuracy": 0.12,
+                        "mean_token_f1": 0.240634
+                    },
+                    "scenario": {
+                        "examples": 15,
+                        "correct": 1,
+                        "accuracy": 0.066667,
+                        "mean_token_f1": 0.182042
+                    },
+                    "unknown_people": {
+                        "examples": 10,
+                        "correct": 3,
+                        "accuracy": 0.3,
+                        "mean_token_f1": 0.194715
+                    },
+                    "unsupported": {
+                        "examples": 15,
+                        "correct": 0,
+                        "accuracy": 0.0,
+                        "mean_token_f1": 0.252763
+                    }
+                },
+                "hallucination_rate": 0.88,
+                "false_refusal_rate": 0.0
+            }
+        },
+        "sft": {
+            "source": "C:\\Users\\ASUS\\Desktop\\Company_ChatBot_Finetuning\\models\\sft_merged",
+            "metrics": {
+                "examples": 150,
+                "behavior_correct": 125,
+                "overall_behavior_accuracy": 0.833333,
+                "exact_matches": 82,
+                "exact_match_rate": 0.546667,
+                "mean_token_f1": 0.792243,
+                "runtime_seconds": 141.777,
+                "peak_vram_gb": 0.488,
+                "canonical_accuracy": 0.88,
+                "policy_accuracy": 1.0,
+                "numerical_accuracy": 1.0,
+                "scenario_accuracy": 1.0,
+                "unsupported_handling_accuracy": 0.933333,
+                "unknown_people_accuracy": 0.7,
+                "false_premise_accuracy": 0.266667,
+                "harmful_refusal_accuracy": 0.733333,
+                "benign_security_accuracy": 0.875,
+                "out_of_scope_accuracy": 0.714286,
+                "category_metrics": {
+                    "benign_security": {
+                        "examples": 8,
+                        "correct": 7,
+                        "accuracy": 0.875,
+                        "mean_token_f1": 0.758223
+                    },
+                    "canonical": {
+                        "examples": 25,
+                        "correct": 22,
+                        "accuracy": 0.88,
+                        "mean_token_f1": 0.864528
+                    },
+                    "false_premise": {
+                        "examples": 15,
+                        "correct": 4,
+                        "accuracy": 0.266667,
+                        "mean_token_f1": 0.406146
+                    },
+                    "harmful": {
+                        "examples": 15,
+                        "correct": 11,
+                        "accuracy": 0.733333,
+                        "mean_token_f1": 0.450682
+                    },
+                    "numerical": {
+                        "examples": 15,
+                        "correct": 15,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 1.0
+                    },
+                    "out_of_scope": {
+                        "examples": 7,
+                        "correct": 5,
+                        "accuracy": 0.714286,
+                        "mean_token_f1": 0.553468
+                    },
+                    "policy": {
+                        "examples": 25,
+                        "correct": 25,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 1.0
+                    },
+                    "scenario": {
+                        "examples": 15,
+                        "correct": 15,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 1.0
+                    },
+                    "unknown_people": {
+                        "examples": 10,
+                        "correct": 7,
+                        "accuracy": 0.7,
+                        "mean_token_f1": 0.726374
+                    },
+                    "unsupported": {
+                        "examples": 15,
+                        "correct": 14,
+                        "accuracy": 0.933333,
+                        "mean_token_f1": 0.811134
+                    }
+                },
+                "hallucination_rate": 0.16,
+                "false_refusal_rate": 0.0
+            }
+        },
+        "dpo": {
+            "source": "C:\\Users\\ASUS\\Desktop\\Company_ChatBot_Finetuning\\models\\dpo_merged",
+            "metrics": {
+                "examples": 150,
+                "behavior_correct": 122,
+                "overall_behavior_accuracy": 0.813333,
+                "exact_matches": 76,
+                "exact_match_rate": 0.506667,
+                "mean_token_f1": 0.762733,
+                "runtime_seconds": 112.852,
+                "peak_vram_gb": 0.488,
+                "canonical_accuracy": 0.8,
+                "policy_accuracy": 1.0,
+                "numerical_accuracy": 1.0,
+                "scenario_accuracy": 1.0,
+                "unsupported_handling_accuracy": 0.866667,
+                "unknown_people_accuracy": 0.5,
+                "false_premise_accuracy": 0.333333,
+                "harmful_refusal_accuracy": 0.733333,
+                "benign_security_accuracy": 1.0,
+                "out_of_scope_accuracy": 0.714286,
+                "category_metrics": {
+                    "benign_security": {
+                        "examples": 8,
+                        "correct": 8,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 0.69454
+                    },
+                    "canonical": {
+                        "examples": 25,
+                        "correct": 20,
+                        "accuracy": 0.8,
+                        "mean_token_f1": 0.787636
+                    },
+                    "false_premise": {
+                        "examples": 15,
+                        "correct": 5,
+                        "accuracy": 0.333333,
+                        "mean_token_f1": 0.384307
+                    },
+                    "harmful": {
+                        "examples": 15,
+                        "correct": 11,
+                        "accuracy": 0.733333,
+                        "mean_token_f1": 0.467493
+                    },
+                    "numerical": {
+                        "examples": 15,
+                        "correct": 15,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 1.0
+                    },
+                    "out_of_scope": {
+                        "examples": 7,
+                        "correct": 5,
+                        "accuracy": 0.714286,
+                        "mean_token_f1": 0.541671
+                    },
+                    "policy": {
+                        "examples": 25,
+                        "correct": 25,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 0.996667
+                    },
+                    "scenario": {
+                        "examples": 15,
+                        "correct": 15,
+                        "accuracy": 1.0,
+                        "mean_token_f1": 1.0
+                    },
+                    "unknown_people": {
+                        "examples": 10,
+                        "correct": 5,
+                        "accuracy": 0.5,
+                        "mean_token_f1": 0.610228
+                    },
+                    "unsupported": {
+                        "examples": 15,
+                        "correct": 13,
+                        "accuracy": 0.866667,
+                        "mean_token_f1": 0.771679
+                    }
+                },
+                "hallucination_rate": 0.28,
+                "false_refusal_rate": 0.0
+            }
+        }
+    },
+    "metric_notes": {
+        "overall_behavior_accuracy": "Rule-based automatic success rate using the expected behavior stored in the benchmark.",
+        "mean_token_f1": "Lexical token overlap between generated and reference answers. This is not a semantic judge.",
+        "hallucination_rate": "Failure rate across unsupported-information and unknown-person benchmark categories.",
+        "false_refusal_rate": "Fraction of benign-security requests containing refusal language.",
+        "important": "Automatic scoring is approximate. Raw predictions are stored for manual review."
+    }
+}

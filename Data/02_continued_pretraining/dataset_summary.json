@@ -1,0 +1,79 @@
+{
+    "dataset_name": "NexaFlow Continued Pretraining Dataset",
+    "tokenizer_model": "Qwen/Qwen2.5-1.5B",
+    "seed": 42,
+    "max_sequence_length": 1024,
+    "target_chunk_tokens": 900,
+    "min_last_chunk_tokens": 100,
+    "source_documents": 175,
+    "document_split": {
+        "train": 140,
+        "validation": 17,
+        "test": 18
+    },
+    "chunk_split": {
+        "train": 438,
+        "validation": 52,
+        "test": 57
+    },
+    "token_statistics": {
+        "train": {
+            "total_tokens": 320829,
+            "min_tokens": 102,
+            "max_tokens": 901,
+            "average_tokens": 732.49
+        },
+        "validation": {
+            "total_tokens": 38444,
+            "min_tokens": 294,
+            "max_tokens": 901,
+            "average_tokens": 739.31
+        },
+        "test": {
+            "total_tokens": 41592,
+            "min_tokens": 126,
+            "max_tokens": 901,
+            "average_tokens": 729.68
+        }
+    },
+    "category_counts": {
+        "train": {
+            "commercial": 39,
+            "company": 32,
+            "security": 55,
+            "product": 49,
+            "it": 38,
+            "operations": 43,
+            "engineering": 29,
+            "support": 32,
+            "people": 53,
+            "ai": 33,
+            "privacy": 29,
+            "sales": 6
+        },
+        "validation": {
+            "operations": 6,
+            "security": 12,
+            "company": 6,
+            "support": 9,
+            "ai": 4,
+            "it": 3,
+            "privacy": 3,
+            "engineering": 6,
+            "people": 3
+        },
+        "test": {
+            "product": 3,
+            "engineering": 9,
+            "commercial": 12,
+            "ai": 9,
+            "people": 3,
+            "security": 7,
+            "company": 3,
+            "it": 7,
+            "support": 4
+        }
+    },
+    "document_level_split": true,
+    "document_leakage": false
+}

@@ -1,0 +1,37 @@
+# Core LLM / Fine-tuning
+unsloth
+torch
+transformers
+datasets
+accelerate
+peft
+trl
+bitsandbytes
+
+# Hugging Face
+huggingface-hub
+safetensors
+tokenizers
+sentencepiece
+
+# Data processing
+numpy
+pandas
+scikit-learn
+
+# Evaluation
+evaluate
+
+# Notebook
+jupyter
+ipykernel
+ipywidgets
+
+# Utilities
+tqdm
+packaging
+psutil
+python-dotenv
+
+# Visualization
+matplotlib

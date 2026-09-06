@@ -1,0 +1,42 @@
+{
+    "dataset_name": "NexaFlow Final Held-Out Evaluation Benchmark",
+    "seed": 12345,
+    "total_examples": 150,
+    "source_documents": 175,
+    "source_policy_rules": 1967,
+    "distribution": {
+        "canonical": 25,
+        "scenario": 15,
+        "numerical": 15,
+        "harmful": 15,
+        "benign_security": 8,
+        "unsupported": 15,
+        "false_premise": 15,
+        "policy": 25,
+        "unknown_people": 10,
+        "out_of_scope": 7
+    },
+    "exact_sft_dpo_prompt_overlap": false,
+    "training_use": false,
+    "hyperparameter_tuning_use": false,
+    "benchmark_frozen": true,
+    "models_to_compare": [
+        "Qwen2.5-1.5B Base",
+        "CPT merged",
+        "SFT merged",
+        "DPO merged"
+    ],
+    "behavior_targets": [
+        "supported factual answers",
+        "policy knowledge",
+        "numerical accuracy",
+        "scenario application",
+        "unsupported-information handling",
+        "unknown-person handling",
+        "false-premise correction",
+        "harmful-request refusal",
+        "benign security assistance",
+        "out-of-scope handling"
+    ],
+    "important_note": "After generation this benchmark should be frozen. Do not modify questions based on model failures."
+}
