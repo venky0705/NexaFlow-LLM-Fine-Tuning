@@ -1,22 +1,16 @@
 from pathlib import Path
+import re
 
-# IMPORTANT:
-# Import Unsloth before transformers-related libraries.
 import unsloth
-
 import torch
 from unsloth import FastLanguageModel
 
 
 # ============================================================
-# PROJECT PATH
+# PATHS
 # ============================================================
 
-PROJECT_ROOT = (
-    Path(__file__)
-    .resolve()
-    .parents[1]
-)
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 MODEL_PATH = (
     PROJECT_ROOT
@@ -30,26 +24,12 @@ MODEL_PATH = (
 # ============================================================
 
 MAX_SEQ_LENGTH = 1024
-
-MAX_NEW_TOKENS = 160
-
+MAX_NEW_TOKENS = 220
 LOAD_IN_4BIT = True
 
 
 # ============================================================
-# CONVERSATION MEMORY CONFIG
-#
-# The model context window we use is 1024 tokens.
-# We therefore keep only recent conversation turns.
-# ============================================================
-
-MAX_HISTORY_MESSAGES = 6
-
-
-# ============================================================
 # SYSTEM INSTRUCTION
-#
-# Keep this aligned with the SFT training behavior.
 # ============================================================
 
 SYSTEM_INSTRUCTION = """
@@ -60,7 +40,7 @@ and documented company policy.
 
 Behavior requirements:
 
-- Give clear, concise, grounded answers.
+- Give clear, grounded, professional answers.
 - Use documented NexaFlow facts when they are available.
 - Do not invent company facts, names, roles, salaries, prices,
   locations, policies, permissions, exceptions, dates, deadlines,
@@ -72,7 +52,7 @@ Behavior requirements:
   do not invent a role for that person.
 - Correct false assumptions when documented information contradicts
   the user's claim.
-- Distinguish the official NexaFlow company location from Venky's
+- Distinguish NexaFlow's official company location from Venky's
   personal city-level location.
 - Apply numerical rules carefully.
 - Missing information must not be treated as permission.
@@ -85,8 +65,18 @@ Behavior requirements:
 - For legitimate security or operational problems, give safe guidance
   and redirect the user to the approved NexaFlow process.
 - Do not unnecessarily refuse harmless security questions.
-- For unrelated questions, explain that they are outside the scope of
-  the NexaFlow company assistant.
+- For unrelated questions, explain that they are outside the scope
+  of the NexaFlow company assistant.
+
+Answer-style requirements:
+
+- For simple factual questions, answer briefly and directly.
+- If the user asks to explain, describe, summarize, give details,
+  asks about rules, or asks about a broad policy, provide a more
+  detailed structured answer.
+- For broad policy explanations, use concise bullet points when
+  multiple supported rules are relevant.
+- Do not add unsupported details only to make an answer longer.
 """.strip()
 
 
@@ -101,9 +91,15 @@ def load_chat_model():
     print("=" * 60)
 
     if not MODEL_PATH.exists():
-
         raise FileNotFoundError(
             f"SFT merged model not found:\n{MODEL_PATH}"
+        )
+
+    config_file = MODEL_PATH / "config.json"
+
+    if not config_file.exists():
+        raise FileNotFoundError(
+            f"Missing config.json:\n{config_file}"
         )
 
     model, tokenizer = (
@@ -116,48 +112,46 @@ def load_chat_model():
     )
 
     if tokenizer.pad_token_id is None:
-
-        tokenizer.pad_token = (
-            tokenizer.eos_token
-        )
+        tokenizer.pad_token = tokenizer.eos_token
 
     tokenizer.padding_side = "left"
-
-    # If truncation becomes necessary, keep the newest context.
     tokenizer.truncation_side = "left"
 
-    FastLanguageModel.for_inference(
-        model
-    )
+    FastLanguageModel.for_inference(model)
 
     model.eval()
 
-    print(
-        "NexaFlow SFT model loaded successfully."
-    )
+    print("NexaFlow SFT model loaded successfully.")
 
     return model, tokenizer
 
 
 # ============================================================
-# BASIC CONVERSATION HANDLER
-#
-# These do not need model inference.
+# NORMALIZATION
+# ============================================================
+
+def normalize_text(text):
+
+    text = str(text).strip().lower()
+
+    text = re.sub(
+        r"[!?.,;:]+$",
+        "",
+        text,
+    )
+
+    text = " ".join(text.split())
+
+    return text
+
+
+# ============================================================
+# SMALL TALK
 # ============================================================
 
 def get_simple_response(question):
 
-    normalized = (
-        question
-        .strip()
-        .lower()
-        .rstrip("!?.")
-    )
-
-
-    # --------------------------------------------------------
-    # GREETINGS
-    # --------------------------------------------------------
+    normalized = normalize_text(question)
 
     if normalized in {
         "hi",
@@ -170,16 +164,10 @@ def get_simple_response(question):
         "good afternoon",
         "good evening",
     }:
-
         return (
             "Hello! I'm the NexaFlow AI Assistant. "
             "How can I help you today?"
         )
-
-
-    # --------------------------------------------------------
-    # HOW ARE YOU
-    # --------------------------------------------------------
 
     if normalized in {
         "how are you",
@@ -187,18 +175,57 @@ def get_simple_response(question):
         "how are you today",
         "how's it going",
         "hows it going",
-        "how are things",
     }:
-
         return (
             "I'm doing well and ready to help. "
             "What would you like to know about NexaFlow?"
         )
 
+    if normalized in {
+        "who are you",
+        "what are you",
+        "what is this assistant",
+        "who is this",
+    }:
+        return (
+            "I'm the NexaFlow AI Assistant. "
+            "I help with documented NexaFlow company information "
+            "and internal policy questions."
+        )
 
-    # --------------------------------------------------------
-    # THANKS
-    # --------------------------------------------------------
+    if normalized in {
+        "what is your name",
+        "what's your name",
+        "whats your name",
+        "your name",
+        "tell me your name",
+    }:
+        return "I'm the NexaFlow AI Assistant."
+
+    if normalized in {
+        "what can you do",
+        "what can you help with",
+        "how can you help",
+        "how can you help me",
+        "help",
+        "help me",
+    }:
+        return (
+            "I can help with documented NexaFlow information including "
+            "company details, pricing, plans, HR policies, annual leave, "
+            "travel, expenses, support, SLA, security procedures, "
+            "AI governance, and internal company processes."
+        )
+
+    if normalized in {
+        "introduce yourself",
+        "tell me about yourself",
+    }:
+        return (
+            "I'm the NexaFlow AI Assistant, a policy-aware internal "
+            "assistant designed to answer questions about documented "
+            "NexaFlow Technologies company information and policies."
+        )
 
     if normalized in {
         "thanks",
@@ -209,16 +236,10 @@ def get_simple_response(question):
         "many thanks",
         "thx",
     }:
-
         return (
             "You're welcome. "
             "Let me know if you have another NexaFlow question."
         )
-
-
-    # --------------------------------------------------------
-    # GOODBYE
-    # --------------------------------------------------------
 
     if normalized in {
         "bye",
@@ -228,70 +249,10 @@ def get_simple_response(question):
         "talk to you later",
         "catch you later",
     }:
-
         return (
             "Goodbye! Feel free to come back whenever "
             "you need help with NexaFlow."
         )
-
-
-    # --------------------------------------------------------
-    # WHO ARE YOU
-    # --------------------------------------------------------
-
-    if normalized in {
-        "who are you",
-        "what are you",
-        "what is this assistant",
-    }:
-
-        return (
-            "I'm the NexaFlow AI Assistant. "
-            "I help with documented NexaFlow company information "
-            "and internal policy questions."
-        )
-
-
-    # --------------------------------------------------------
-    # NAME
-    # --------------------------------------------------------
-
-    if normalized in {
-        "what is your name",
-        "what's your name",
-        "whats your name",
-        "your name",
-    }:
-
-        return (
-            "I'm the NexaFlow AI Assistant."
-        )
-
-
-    # --------------------------------------------------------
-    # CAPABILITIES
-    # --------------------------------------------------------
-
-    if normalized in {
-        "what can you do",
-        "what can you help with",
-        "how can you help",
-        "how can you help me",
-        "help",
-        "help me",
-    }:
-
-        return (
-            "I can help with documented NexaFlow information including "
-            "company details, pricing, plans, HR policies, annual leave, "
-            "travel, expenses, support, SLA, security procedures, "
-            "AI governance, and internal company processes."
-        )
-
-
-    # --------------------------------------------------------
-    # READY / ONLINE
-    # --------------------------------------------------------
 
     if normalized in {
         "are you ready",
@@ -299,16 +260,10 @@ def get_simple_response(question):
         "are you online",
         "are you available",
     }:
-
         return (
             "Yes, I'm ready to help with NexaFlow company "
             "information and policy questions."
         )
-
-
-    # --------------------------------------------------------
-    # POSITIVE ACKNOWLEDGEMENTS
-    # --------------------------------------------------------
 
     if normalized in {
         "good",
@@ -319,162 +274,77 @@ def get_simple_response(question):
         "perfect",
         "okay",
         "ok",
+        "got it",
+        "sounds good",
     }:
-
         return (
             "Glad to hear that. "
             "What would you like to know about NexaFlow?"
         )
 
-
-    # --------------------------------------------------------
-    # INTRODUCTION
-    # --------------------------------------------------------
-
-    if normalized in {
-        "introduce yourself",
-        "tell me about yourself",
-    }:
-
-        return (
-            "I'm the NexaFlow AI Assistant, a policy-aware internal "
-            "assistant designed to answer questions about documented "
-            "NexaFlow Technologies company information and policies."
-        )
-
-
     return None
 
 
 # ============================================================
-# BUILD QUESTION WITH RECENT HISTORY
-#
-# IMPORTANT:
-#
-# The outer prompt still uses the exact SFT structure:
-#
-# ### Instruction:
-#
-# ### Question:
-#
-# ### Response:
-#
-# Conversation history is placed inside the Question section.
+# DETECT DETAILED REQUEST
 # ============================================================
 
-def build_question_with_history(
-    messages,
-):
+def wants_detailed_answer(question):
 
-    if not messages:
+    text = normalize_text(question)
 
-        return ""
+    detailed_markers = [
+        "explain",
+        "describe",
+        "summarize",
+        "give details",
+        "in detail",
+        "tell me the rules",
+        "what are the rules",
+        "what rules",
+        "policy",
+        "policies",
+        "rules",
+        "new joinee",
+        "new joiner",
+        "new employee",
+        "what should i know",
+        "what do i need to know",
+        "walk me through",
+    ]
 
-
-    current_question = (
-        messages[-1]
-        .get(
-            "content",
-            ""
-        )
-        .strip()
-    )
-
-
-    previous_messages = (
-        messages[:-1]
-    )
-
-
-    # Keep only recent history.
-    previous_messages = (
-        previous_messages[
-            -MAX_HISTORY_MESSAGES:
-        ]
-    )
-
-
-    if not previous_messages:
-
-        return current_question
-
-
-    history_lines = []
-
-
-    for message in previous_messages:
-
-        role = (
-            message.get(
-                "role",
-                ""
-            )
-        )
-
-        content = (
-            message.get(
-                "content",
-                ""
-            )
-            .strip()
-        )
-
-        if not content:
-
-            continue
-
-
-        if role == "user":
-
-            history_lines.append(
-                f"User: {content}"
-            )
-
-
-        elif role == "assistant":
-
-            history_lines.append(
-                f"Assistant: {content}"
-            )
-
-
-    if not history_lines:
-
-        return current_question
-
-
-    history_text = "\n".join(
-        history_lines
-    )
-
-
-    return (
-        "Use the recent conversation only when it is relevant "
-        "to understanding the current question.\n\n"
-        "Recent conversation:\n"
-        f"{history_text}\n\n"
-        "Current question:\n"
-        f"{current_question}"
+    return any(
+        marker in text
+        for marker in detailed_markers
     )
 
 
 # ============================================================
-# BUILD MODEL PROMPT
+# BUILD PROMPT
 # ============================================================
 
-def build_prompt(
-    messages,
-):
+def build_prompt(question):
 
-    question = (
-        build_question_with_history(
-            messages
+    question = str(question).strip()
+
+    if wants_detailed_answer(question):
+
+        detail_instruction = (
+            "\n\nFor this question, provide a structured explanation "
+            "with multiple relevant supported points. Use concise bullet "
+            "points when appropriate. Do not invent missing rules."
         )
-    )
+
+    else:
+
+        detail_instruction = (
+            "\n\nFor this question, answer directly and concisely."
+        )
 
     return (
         "### Instruction:\n"
-        f"{SYSTEM_INSTRUCTION}\n\n"
+        f"{SYSTEM_INSTRUCTION}"
+        f"{detail_instruction}\n\n"
         "### Question:\n"
         f"{question}\n\n"
         "### Response:\n"
@@ -482,18 +352,12 @@ def build_prompt(
 
 
 # ============================================================
-# CLEAN GENERATED RESPONSE
+# CLEAN RESPONSE
 # ============================================================
 
-def clean_response(
-    text,
-):
+def clean_response(text):
 
-    text = (
-        str(text)
-        .strip()
-    )
-
+    text = str(text).strip()
 
     stop_markers = [
         "\n### Instruction:",
@@ -503,26 +367,22 @@ def clean_response(
         "\nAssistant:",
     ]
 
-
     for marker in stop_markers:
-
         if marker in text:
-
             text = (
                 text
-                .split(
-                    marker,
-                    1,
-                )[0]
+                .split(marker, 1)[0]
                 .strip()
             )
-
 
     return text
 
 
 # ============================================================
 # GENERATE RESPONSE
+#
+# UI can keep full history, but only latest user question
+# goes to the model.
 # ============================================================
 
 @torch.inference_mode()
@@ -533,51 +393,35 @@ def generate_response(
 ):
 
     if not messages:
-
-        return (
-            "How can I help with NexaFlow?"
-        )
-
+        return "How can I help with NexaFlow?"
 
     current_question = (
         messages[-1]
-        .get(
-            "content",
-            ""
-        )
+        .get("content", "")
+        .strip()
     )
 
+    if not current_question:
+        return "Please enter a question."
 
     # --------------------------------------------------------
-    # HANDLE SMALL TALK LOCALLY
+    # SMALL TALK FIRST
     # --------------------------------------------------------
 
-    simple_response = (
-        get_simple_response(
-            current_question
-        )
+    simple_response = get_simple_response(
+        current_question
     )
-
 
     if simple_response is not None:
-
         return simple_response
 
-
     # --------------------------------------------------------
-    # BUILD PROMPT
+    # MODEL PROMPT
     # --------------------------------------------------------
 
-    prompt = (
-        build_prompt(
-            messages
-        )
+    prompt = build_prompt(
+        current_question
     )
-
-
-    # --------------------------------------------------------
-    # TOKENIZE
-    # --------------------------------------------------------
 
     inputs = tokenizer(
         prompt,
@@ -586,26 +430,14 @@ def generate_response(
         max_length=MAX_SEQ_LENGTH,
     )
 
-
     inputs = {
-        key: value.to(
-            model.device
-        )
-        for key, value
-        in inputs.items()
+        key: value.to(model.device)
+        for key, value in inputs.items()
     }
 
-
     prompt_length = (
-        inputs[
-            "input_ids"
-        ].shape[1]
+        inputs["input_ids"].shape[1]
     )
-
-
-    # --------------------------------------------------------
-    # GENERATE
-    # --------------------------------------------------------
 
     outputs = model.generate(
         **inputs,
@@ -616,38 +448,24 @@ def generate_response(
         use_cache=True,
     )
 
-
-    # --------------------------------------------------------
-    # DECODE ONLY NEW TOKENS
-    # --------------------------------------------------------
-
-    generated_tokens = (
-        outputs[
-            0,
-            prompt_length:
-        ]
-    )
-
+    generated_tokens = outputs[
+        0,
+        prompt_length:
+    ]
 
     response = tokenizer.decode(
         generated_tokens,
         skip_special_tokens=True,
     )
 
-
-    response = (
-        clean_response(
-            response
-        )
+    response = clean_response(
+        response
     )
 
-
     if not response:
-
         return (
             "I wasn't able to generate a response. "
             "Please try rephrasing your NexaFlow question."
         )
-
 
     return response

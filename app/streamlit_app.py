@@ -15,21 +15,14 @@ PROJECT_ROOT = (
     .parents[1]
 )
 
-APP_DIR = (
-    PROJECT_ROOT
-    / "app"
-)
-
+APP_DIR = PROJECT_ROOT / "app"
 
 if str(APP_DIR) not in sys.path:
-
-    sys.path.append(
-        str(APP_DIR)
-    )
+    sys.path.append(str(APP_DIR))
 
 
 # ============================================================
-# IMPORT CHAT ENGINE
+# IMPORT ENGINE
 # ============================================================
 
 from chatbot_engine import (
@@ -51,37 +44,23 @@ st.set_page_config(
 
 
 # ============================================================
-# CUSTOM CSS
+# CSS
 # ============================================================
 
 st.markdown(
     """
 <style>
 
-/* ==========================================================
-   MAIN APP
-========================================================== */
-
 .stApp {
     background: #0f1117;
     color: #f3f4f6;
 }
-
-
-/* ==========================================================
-   MAIN CONTENT
-========================================================== */
 
 .block-container {
     max-width: 950px;
     padding-top: 2.5rem;
     padding-bottom: 7rem;
 }
-
-
-/* ==========================================================
-   SIDEBAR
-========================================================== */
 
 section[data-testid="stSidebar"] {
     background: #17191f;
@@ -91,11 +70,6 @@ section[data-testid="stSidebar"] {
 section[data-testid="stSidebar"] > div {
     padding-top: 1.5rem;
 }
-
-
-/* ==========================================================
-   HEADER
-========================================================== */
 
 .app-header {
     margin-bottom: 22px;
@@ -113,11 +87,6 @@ section[data-testid="stSidebar"] > div {
     color: #9ca3af;
     font-size: 14px;
 }
-
-
-/* ==========================================================
-   STATUS CARDS
-========================================================== */
 
 .status-card {
     background: rgba(255,255,255,0.04);
@@ -142,11 +111,6 @@ section[data-testid="stSidebar"] > div {
     margin-top: 5px;
 }
 
-
-/* ==========================================================
-   EMPTY STATE
-========================================================== */
-
 .empty-state {
     margin-top: 45px;
     text-align: center;
@@ -166,21 +130,11 @@ section[data-testid="stSidebar"] > div {
     margin: 0 auto 25px auto;
 }
 
-
-/* ==========================================================
-   CHAT MESSAGES
-========================================================== */
-
 div[data-testid="stChatMessage"] {
     border-radius: 14px;
     padding: 8px 4px;
     margin-bottom: 7px;
 }
-
-
-/* ==========================================================
-   CHAT INPUT
-========================================================== */
 
 div[data-testid="stChatInput"] {
     position: fixed;
@@ -190,11 +144,6 @@ div[data-testid="stChatInput"] {
     width: min(900px, calc(100vw - 360px));
     z-index: 999;
 }
-
-
-/* ==========================================================
-   BUTTONS
-========================================================== */
 
 .stButton > button {
     border-radius: 10px;
@@ -209,11 +158,6 @@ div[data-testid="stChatInput"] {
     background: rgba(255,255,255,0.06);
 }
 
-
-/* ==========================================================
-   SMALL TEXT
-========================================================== */
-
 .response-meta {
     color: #747b88;
     font-size: 11px;
@@ -224,11 +168,6 @@ div[data-testid="stChatInput"] {
     color: #8b93a1;
     font-size: 12px;
 }
-
-
-/* ==========================================================
-   MOBILE
-========================================================== */
 
 @media (max-width: 900px) {
 
@@ -251,14 +190,9 @@ div[data-testid="stChatInput"] {
 
 # ============================================================
 # MODEL CACHE
-#
-# Streamlit reruns frequently.
-# This prevents the SFT model from being reloaded each time.
 # ============================================================
 
-@st.cache_resource(
-    show_spinner=False
-)
+@st.cache_resource(show_spinner=False)
 def get_model():
 
     return load_chat_model()
@@ -272,9 +206,7 @@ with st.spinner(
     "Loading NexaFlow AI..."
 ):
 
-    model, tokenizer = (
-        get_model()
-    )
+    model, tokenizer = get_model()
 
 
 # ============================================================
@@ -282,50 +214,34 @@ with st.spinner(
 # ============================================================
 
 if "messages" not in st.session_state:
-
     st.session_state.messages = []
 
-
 if "conversation_id" not in st.session_state:
-
     st.session_state.conversation_id = 1
 
-
 if "pending_prompt" not in st.session_state:
-
     st.session_state.pending_prompt = None
 
-
 if "last_response_time" not in st.session_state:
-
     st.session_state.last_response_time = None
 
 
 # ============================================================
-# NEW CONVERSATION
+# HELPERS
 # ============================================================
 
 def new_conversation():
 
     st.session_state.messages = []
-
     st.session_state.pending_prompt = None
-
     st.session_state.last_response_time = None
-
     st.session_state.conversation_id += 1
 
-
-# ============================================================
-# CLEAR CHAT
-# ============================================================
 
 def clear_chat():
 
     st.session_state.messages = []
-
     st.session_state.pending_prompt = None
-
     st.session_state.last_response_time = None
 
 
@@ -335,20 +251,13 @@ def clear_chat():
 
 with st.sidebar:
 
-    st.markdown(
-        "## NexaFlow"
-    )
+    st.markdown("## NexaFlow")
 
     st.caption(
         "Internal AI Assistant"
     )
 
     st.divider()
-
-
-    # --------------------------------------------------------
-    # MODEL
-    # --------------------------------------------------------
 
     st.markdown(
         """
@@ -360,11 +269,6 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-
-    # --------------------------------------------------------
-    # MODE
-    # --------------------------------------------------------
-
     st.markdown(
         """
 <div class="status-card">
@@ -374,11 +278,6 @@ with st.sidebar:
 """,
         unsafe_allow_html=True,
     )
-
-
-    # --------------------------------------------------------
-    # INFERENCE
-    # --------------------------------------------------------
 
     st.markdown(
         """
@@ -390,63 +289,40 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-
-    # --------------------------------------------------------
-    # MEMORY
-    # --------------------------------------------------------
-
     st.markdown(
         """
 <div class="status-card">
-<div class="status-label">Memory</div>
-<div class="status-value">Recent session context</div>
+<div class="status-label">Context</div>
+<div class="status-value">Independent SFT questions</div>
 </div>
 """,
         unsafe_allow_html=True,
     )
 
-
     st.divider()
-
-
-    # --------------------------------------------------------
-    # CONVERSATION INFO
-    # --------------------------------------------------------
 
     st.markdown(
         "### Conversation"
     )
 
-
-    total_messages = (
-        len(
-            st.session_state.messages
-        )
+    total_messages = len(
+        st.session_state.messages
     )
-
 
     user_messages = sum(
         1
-        for message
-        in st.session_state.messages
+        for message in st.session_state.messages
         if message.get("role") == "user"
     )
-
 
     st.caption(
         f"Conversation #{st.session_state.conversation_id}"
     )
 
-
     st.caption(
         f"{total_messages} messages · "
         f"{user_messages} user questions"
     )
-
-
-    # --------------------------------------------------------
-    # NEW CHAT
-    # --------------------------------------------------------
 
     if st.button(
         "＋ New conversation",
@@ -455,13 +331,7 @@ with st.sidebar:
     ):
 
         new_conversation()
-
         st.rerun()
-
-
-    # --------------------------------------------------------
-    # CLEAR CHAT
-    # --------------------------------------------------------
 
     if st.button(
         "Clear chat",
@@ -470,16 +340,9 @@ with st.sidebar:
     ):
 
         clear_chat()
-
         st.rerun()
 
-
     st.divider()
-
-
-    # --------------------------------------------------------
-    # CAPABILITIES
-    # --------------------------------------------------------
 
     st.markdown(
         "### Can help with"
@@ -513,13 +376,7 @@ with st.sidebar:
         "Internal policies"
     )
 
-
     st.divider()
-
-
-    # --------------------------------------------------------
-    # FOOTER
-    # --------------------------------------------------------
 
     st.caption(
         "NexaFlow AI · Experimental internal assistant"
@@ -544,7 +401,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-
 st.divider()
 
 
@@ -568,17 +424,7 @@ support, or internal processes.
         unsafe_allow_html=True,
     )
 
-
-    # --------------------------------------------------------
-    # SUGGESTED PROMPTS
-    # --------------------------------------------------------
-
-    col1, col2 = (
-        st.columns(
-            2
-        )
-    )
-
+    col1, col2 = st.columns(2)
 
     with col1:
 
@@ -594,19 +440,17 @@ support, or internal processes.
 
             st.rerun()
 
-
         if st.button(
-            "What is the annual leave policy?",
+            "Explain the annual leave policy",
             use_container_width=True,
             key="suggestion_leave",
         ):
 
             st.session_state.pending_prompt = (
-                "What is the annual leave policy?"
+                "Explain the annual leave policy"
             )
 
             st.rerun()
-
 
     with col2:
 
@@ -622,7 +466,6 @@ support, or internal processes.
 
             st.rerun()
 
-
         if st.button(
             "I lost my MFA device. What should I do?",
             use_container_width=True,
@@ -637,41 +480,28 @@ support, or internal processes.
 
 
 # ============================================================
-# DISPLAY CHAT HISTORY
+# DISPLAY HISTORY
 # ============================================================
 
 for message in st.session_state.messages:
 
-    role = (
-        message.get(
-            "role",
-            "assistant",
-        )
+    role = message.get(
+        "role",
+        "assistant",
     )
 
-
-    content = (
-        message.get(
-            "content",
-            ""
-        )
+    content = message.get(
+        "content",
+        "",
     )
 
+    with st.chat_message(role):
 
-    with st.chat_message(
-        role
-    ):
-
-        st.markdown(
-            content
-        )
-
+        st.markdown(content)
 
         if (
             role == "assistant"
-            and message.get(
-                "response_time"
-            ) is not None
+            and message.get("response_time") is not None
         ):
 
             st.markdown(
@@ -688,21 +518,16 @@ for message in st.session_state.messages:
 # CHAT INPUT
 # ============================================================
 
-user_prompt = (
-    st.chat_input(
-        "Ask NexaFlow..."
-    )
+user_prompt = st.chat_input(
+    "Ask NexaFlow..."
 )
 
 
 # ============================================================
-# HANDLE SUGGESTION BUTTON
+# SUGGESTION INPUT
 # ============================================================
 
-if (
-    st.session_state.pending_prompt
-    is not None
-):
+if st.session_state.pending_prompt is not None:
 
     user_prompt = (
         st.session_state.pending_prompt
@@ -712,18 +537,14 @@ if (
 
 
 # ============================================================
-# PROCESS MESSAGE
+# PROCESS USER MESSAGE
 # ============================================================
 
 if user_prompt:
 
-    user_prompt = (
-        user_prompt.strip()
-    )
-
+    user_prompt = user_prompt.strip()
 
     if user_prompt:
-
 
         # ----------------------------------------------------
         # STORE USER MESSAGE
@@ -736,19 +557,15 @@ if user_prompt:
             }
         )
 
-
         # ----------------------------------------------------
-        # DISPLAY USER MESSAGE
+        # SHOW USER
         # ----------------------------------------------------
 
-        with st.chat_message(
-            "user"
-        ):
+        with st.chat_message("user"):
 
             st.markdown(
                 user_prompt
             )
-
 
         # ----------------------------------------------------
         # GENERATE ASSISTANT RESPONSE
@@ -762,11 +579,9 @@ if user_prompt:
                 st.empty()
             )
 
-
             status_placeholder = (
                 st.empty()
             )
-
 
             status_placeholder.markdown(
                 """
@@ -777,24 +592,15 @@ Thinking...
                 unsafe_allow_html=True,
             )
 
-
-            start_time = (
-                time.perf_counter()
-            )
-
+            start_time = time.perf_counter()
 
             try:
 
-                response = (
-                    generate_response(
-                        model=model,
-                        tokenizer=tokenizer,
-                        messages=(
-                            st.session_state.messages
-                        ),
-                    )
+                response = generate_response(
+                    model=model,
+                    tokenizer=tokenizer,
+                    messages=st.session_state.messages,
                 )
-
 
                 if not response:
 
@@ -803,6 +609,15 @@ Thinking...
                         "Please try rephrasing your NexaFlow question."
                     )
 
+            except torch.cuda.OutOfMemoryError:
+
+                if torch.cuda.is_available():
+                    torch.cuda.empty_cache()
+
+                response = (
+                    "The model ran out of GPU memory while processing "
+                    "that request. Please try again."
+                )
 
             except Exception as error:
 
@@ -811,25 +626,20 @@ Thinking...
                     "processing that request."
                 )
 
-
                 st.error(
                     str(error)
                 )
-
 
             elapsed = (
                 time.perf_counter()
                 - start_time
             )
 
-
             status_placeholder.empty()
-
 
             response_placeholder.markdown(
                 response
             )
-
 
             st.markdown(
                 (
@@ -840,9 +650,8 @@ Thinking...
                 unsafe_allow_html=True,
             )
 
-
         # ----------------------------------------------------
-        # STORE ASSISTANT MESSAGE
+        # STORE ASSISTANT RESPONSE
         # ----------------------------------------------------
 
         st.session_state.messages.append(
@@ -853,14 +662,6 @@ Thinking...
             }
         )
 
-
-        st.session_state.last_response_time = (
-            elapsed
-        )
-
-
-        # ----------------------------------------------------
-        # RERUN UI
-        # ----------------------------------------------------
+        st.session_state.last_response_time = elapsed
 
         st.rerun()
